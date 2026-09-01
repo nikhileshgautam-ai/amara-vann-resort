@@ -9,6 +9,15 @@ const isStaticExport =
   Boolean(process.env.CF_PAGES) || process.env.BUILD_TARGET === "static";
 
 /**
+ * A GitHub Pages project site is served from /<repo>, not the domain root, so
+ * routes and assets need that prefix or every stylesheet 404s. The deploy
+ * workflow reads it from actions/configure-pages, which returns an empty string
+ * once a custom domain is attached. Cloudflare Pages serves from the root and
+ * never sets it.
+ */
+const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
+
+/**
  * Security headers for a public marketing site. No third-party scripts are
  * loaded, so the CSP can stay tight; the only external frame is the Google
  * Maps embed on the contact page.
@@ -56,6 +65,7 @@ const nextConfig: NextConfig = {
   ...(isStaticExport
     ? {
         output: "export" as const,
+        ...(basePath ? { basePath } : {}),
         // There is no server to run the image optimizer, so images are served
         // exactly as committed. See the note in README about sizing photos
         // before they go in the repo.
