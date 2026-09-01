@@ -1,0 +1,211 @@
+@import "tailwindcss";
+
+@theme {
+  --color-ink: #0f1d17;
+  --color-forest: #16362b;
+  --color-moss: #2c5a48;
+  --color-sage: #8ba699;
+  --color-mist: #d9e2dc;
+  --color-cream: #fbf8f2;
+  --color-sand: #efe6d6;
+  --color-clay: #cdbba1;
+  --color-brass: #a97e46;
+  --color-brass-soft: #d9bb8c;
+
+  --font-display: "Cormorant Garamond", Georgia, "Times New Roman", serif;
+  --font-sans: "Inter Variable", "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
+}
+
+:root {
+  color-scheme: light;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  min-height: 100dvh;
+  background-color: var(--color-cream);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  /* Stops the grey flash Android and iOS paint over tapped elements. */
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Section heights in svh, which tracks the SMALL viewport - the height with
+   the mobile address bar showing. Using vh here would size sections to the
+   large viewport, and the hero would be cropped until the user scrolled.
+   No vh fallback: svh landed in Safari 15.4, well below this project's floor
+   of Safari 16.4 (see the browser support note in README). */
+.h-hero {
+  min-height: 92svh;
+}
+
+.h-page-hero {
+  min-height: 54svh;
+}
+
+.h-screen-copy {
+  min-height: 80svh;
+}
+
+/* Visible, on-brand focus ring for keyboard users everywhere. */
+:focus-visible {
+  outline: 2px solid var(--color-brass);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+::selection {
+  background: var(--color-brass-soft);
+  color: var(--color-ink);
+}
+
+.container-page {
+  width: 100%;
+  margin-inline: auto;
+  max-width: 80rem;
+  /* The safe-area terms matter in landscape on notched phones, where the
+     display cutout eats into the left or right edge. */
+  padding-inline: max(1.25rem, env(safe-area-inset-left))
+    max(1.25rem, env(safe-area-inset-right));
+}
+
+@media (min-width: 768px) {
+  .container-page {
+    padding-inline: max(2rem, env(safe-area-inset-left))
+      max(2rem, env(safe-area-inset-right));
+  }
+}
+
+.eyebrow {
+  font-size: 0.72rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+/* Subtle paper texture used behind light sections. */
+.texture-paper {
+  background-image: radial-gradient(
+    rgba(169, 126, 70, 0.07) 1px,
+    transparent 1px
+  );
+  background-size: 22px 22px;
+}
+
+/* Film grain. Sits above a backdrop, below the content. */
+.grain::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.16;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Hairline diagonal weave, used to give flat panels some structure. */
+.weave {
+  background-image: repeating-linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.05) 0px,
+    rgba(255, 255, 255, 0.05) 1px,
+    transparent 1px,
+    transparent 9px
+  );
+}
+
+.balance {
+  text-wrap: balance;
+}
+
+.pretty {
+  text-wrap: pretty;
+}
+
+/* Brass rule with a centred diamond, used between major sections. */
+.rule-diamond {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+.rule-diamond::before,
+.rule-diamond::after {
+  content: "";
+  height: 1px;
+  flex: 1;
+  background: linear-gradient(
+    to right,
+    transparent,
+    color-mix(in srgb, var(--color-brass) 45%, transparent),
+    transparent
+  );
+}
+
+/* Safari lets a transformed child bleed past a rounded overflow:hidden
+   parent. Giving the parent its own stacking context stops the leak. */
+.clip-round {
+  isolation: isolate;
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+}
+
+/* Touch devices have no hover, so anything hover-only must have a
+   non-hover state or it is simply invisible to half the visitors. */
+@media (hover: none) {
+  .reveal-on-hover {
+    opacity: 1;
+  }
+}
+
+/* Without JavaScript the curtain would never lift, so never show it. */
+.no-js #intro-curtain {
+  display: none;
+}
+
+@keyframes route-progress {
+  0% {
+    transform: scaleX(0);
+    opacity: 1;
+  }
+  60% {
+    transform: scaleX(0.75);
+    opacity: 1;
+  }
+  100% {
+    transform: scaleX(0.96);
+    opacity: 1;
+  }
+}
+
+@keyframes kenburns {
+  from {
+    transform: scale(1.04) translate3d(0, 0, 0);
+  }
+  to {
+    transform: scale(1.13) translate3d(-1.5%, -1%, 0);
+  }
+}
+
+.kenburns {
+  animation: kenburns 28s ease-in-out infinite alternate;
+  will-change: transform;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}

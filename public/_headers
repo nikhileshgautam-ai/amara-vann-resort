@@ -1,0 +1,14 @@
+# Cloudflare Pages reads this file from the build output root.
+# A static export has no server, so next.config.ts headers() never runs -
+# these are the same headers, kept in sync by hand. Change one, change both.
+/*
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self'; frame-src https://www.google.com https://maps.google.com; form-action 'self'; frame-ancestors 'none'; base-uri 'self'; object-src 'none'; upgrade-insecure-requests
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: DENY
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), interest-cohort=()
+  Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+
+# Fingerprinted build assets never change under the same name.
+/_next/static/*
+  Cache-Control: public, max-age=31536000, immutable
